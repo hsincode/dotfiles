@@ -1,0 +1,32 @@
+# lazygit（hsincode/dotfiles の config/lazygit/config.yml）。Linux と macOS で共通
+# 置き場所は OS で違う: Linux は ~/.config/lazygit、macOS は ~/Library/Application Support/lazygit
+
+os:
+  # 1) OSC 52 で端末（Ghostty）のクリップボードへ。tmux 内は passthrough で外へ通す
+  #    （tmux の allow-passthrough が必要）。X11 待ちで UI が固まらない
+  # 2) OS のクリップボードへもベストエフォートで（X11 / Wayland はハング防止に timeout）
+  copyToClipboardCmd: |
+    b64=$(printf %s {{text}} | base64 | tr -d '\n')
+    if [ -n "${TMUX-}" ]; then
+      printf '\033Ptmux;\033\033]52;c;%s\007\033\\' "$b64" > /dev/tty
+    else
+      printf '\033]52;c;%s\007' "$b64" > /dev/tty
+    fi
+    if command -v pbcopy >/dev/null 2>&1; then
+      printf %s {{text}} | pbcopy
+    elif [ -n "${WAYLAND_DISPLAY-}" ] && command -v wl-copy >/dev/null 2>&1; then
+      printf %s {{text}} | timeout 0.5 wl-copy >/dev/null 2>&1 || true
+    elif command -v clipset >/dev/null 2>&1; then
+      # clipset は読み込んだらすぐ裏に回るので待たない（xclip は 1MB 超で貼り付け先を固める）
+      printf %s {{text}} | env DISPLAY="${DISPLAY:-:0}" clipset >/dev/null 2>&1 || true
+    elif command -v xclip >/dev/null 2>&1; then
+      printf %s {{text}} | timeout 0.5 env DISPLAY="${DISPLAY:-:0}" xclip -selection clipboard -i >/dev/null 2>&1 || true
+    fi
+  readFromClipboardCmd: |
+    if command -v pbpaste >/dev/null 2>&1; then
+      pbpaste
+    elif [ -n "${WAYLAND_DISPLAY-}" ] && command -v wl-paste >/dev/null 2>&1; then
+      timeout 1 wl-paste --no-newline 2>/dev/null
+    else
+      timeout 1 env DISPLAY="${DISPLAY:-:0}" xclip -selection clipboard -o 2>/dev/null
+    fi

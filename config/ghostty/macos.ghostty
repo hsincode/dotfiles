@@ -1,0 +1,13 @@
+# macOS 固有（~/.config/ghostty/os.ghostty としてリンクされる）
+
+font-family = "Iosevka Nerd Font Mono"
+font-size = 20
+
+theme = "Catppuccin Latte"
+
+# 背景はすりガラス
+background-opacity = 0.0
+background-blur = macos-glass-regular
+
+# Option を Alt として使う（シェルや tmux の Alt キー）
+macos-option-as-alt = true

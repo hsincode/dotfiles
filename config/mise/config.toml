@@ -1,0 +1,7 @@
+# ~/.config/mise/config.toml（hsincode/dotfiles の config/mise/config.toml）
+# OS で入れるものが違うときは os = [...] で絞る。
+
+[tools]
+node = "24"
+claude = "latest"
+"github:vladelaina/BongoCat" = { version = "latest", os = ["linux"] }

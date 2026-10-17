@@ -1,0 +1,64 @@
+# ~/.bashrc（hsincode/dotfiles の config/bash/bashrc）
+# Linux と macOS で共通。OS ごとの差分は最後に読む ~/.config/bash/os.bash にある
+# （./dot link が linux.bash か macos.bash をその名前でリンクする）。
+
+# ---- 環境変数と PATH（非対話シェルにも効かせる） ----
+
+# ディレクトリがあるときだけ PATH に足す。同じものは二重に足さない
+# 使い方: _path_add DIR [append]（既定は先頭に足す。あとから足したものほど前に来る）
+_path_add() {
+    [ -d "$1" ] || return 0
+    case ":$PATH:" in
+        *":$1:"*) ;;
+        *) if [ "$2" = append ]; then PATH="$PATH:$1"; else PATH="$1:$PATH"; fi ;;
+    esac
+}
+
+export GOPATH="${GOPATH:-$HOME/go}"
+export BUN_INSTALL="$HOME/.bun"
+export PNPM_HOME="$HOME/.local/share/pnpm"
+export EDITOR=nvim
+
+# 優先度の低い順に足す（入っていないツールは飛ばされる）
+_path_add /opt/homebrew/sbin
+_path_add /opt/homebrew/bin
+_path_add /opt/gcc-15.2/bin
+_path_add "$HOME/.cargo/bin"
+_path_add "$HOME/.grok/bin"
+_path_add "$HOME/.kimi-code/bin"
+_path_add "$PNPM_HOME"
+_path_add "$BUN_INSTALL/bin"
+_path_add "$HOME/.local/bin"
+_path_add "$GOPATH/bin" append
+_path_add "$HOME/.spicetify" append
+export PATH
+
+# ---- ここから対話シェルだけ ----
+[[ $- == *i* ]] || return
+
+# マシン固有の環境変数・秘密（git 管理外）
+[ -r "$HOME/.env" ] && . "$HOME/.env"
+
+alias grep='grep --color=auto'
+
+# プロンプト: -> ディレクトリ名 (ブランチ) $
+git_branch() {
+    git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+PS1='-> \[\e[32m\]\W\[\e[0m\]$(git_branch) $ '
+
+# 補完（入っているものだけ読む）
+for _f in /usr/share/bash-completion/bash_completion \
+          /opt/homebrew/etc/profile.d/bash_completion.sh; do
+    if [ -r "$_f" ]; then . "$_f"; break; fi
+done
+for _f in "$HOME/.grok/completions/bash/grok.bash" \
+          "$HOME/.foregejorc"; do
+    [ -r "$_f" ] && . "$_f"
+done
+unset _f
+
+command -v mise >/dev/null && eval "$(mise activate bash)"
+
+# OS ごとの差分（最後に読むので、ここまでの設定を上書きできる）
+[ -r "$HOME/.config/bash/os.bash" ] && . "$HOME/.config/bash/os.bash"

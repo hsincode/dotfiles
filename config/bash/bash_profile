@@ -1,0 +1,9 @@
+# ~/.bash_profile（hsincode/dotfiles の config/bash/bash_profile）
+# ログインシェルも ~/.bashrc に任せる。環境変数と PATH は .bashrc の前半にある。
+[ -r "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+
+# SDKMAN（入れているマシンだけ）。SDKMAN の指示でファイルの最後に置く
+if [ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]; then
+    export SDKMAN_DIR="$HOME/.sdkman"
+    . "$HOME/.sdkman/bin/sdkman-init.sh"
+fi

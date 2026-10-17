@@ -1,0 +1,22 @@
+# ~/.config/git/config（hsincode/dotfiles の config/git/config）
+# Linux と macOS で共通。マシンごとに変えたい値は ~/.config/git/local（git 管理外）へ。
+
+[user]
+	name = hsincode
+	email = dev@hsincode.com
+[init]
+	defaultBranch = master
+[alias]
+	st = status
+
+# GitHub の認証は gh に任せる（gh auth setup-git と同じ内容。PATH 上の gh を使う）
+[credential "https://github.com"]
+	helper =
+	helper = !gh auth git-credential
+[credential "https://gist.github.com"]
+	helper =
+	helper = !gh auth git-credential
+
+# マシン固有の上書き。ファイルが無ければ git は黙って飛ばす
+[include]
+	path = ~/.config/git/local

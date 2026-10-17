@@ -1,0 +1,3 @@
+# すべてのリポジトリで無視するファイル（~/.config/git/ignore）
+**/.claude/settings.local.json
+.DS_Store

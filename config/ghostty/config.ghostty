@@ -1,0 +1,26 @@
+# ~/.config/ghostty/config.ghostty（hsincode/dotfiles の config/ghostty/config.ghostty）
+# Linux と macOS で共通。フォント・テーマなど OS ごとの差分は os.ghostty にある
+# （./dot link が linux.ghostty か macos.ghostty をその名前でリンクする）。
+
+title = "Ghostty"
+
+window-padding-x = 12
+window-padding-y = 12
+window-decoration = none
+
+cursor-style = block
+cursor-style-blink = false
+cursor-opacity = 0.85
+mouse-hide-while-typing = true
+# shell integration はプロンプトで bar カーソルを差し込み、cursor-style より優先される。
+# block に固定したいので無効にする
+shell-integration-features = no-cursor
+
+app-notifications = false
+confirm-close-surface = false
+
+keybind = ctrl+shift+0=reset_font_size
+keybind = ctrl+shift+n=unbind
+
+# config-file はこのファイルを読み終えてから読まれるので、os.ghostty の値が後勝ちになる
+config-file = ?os.ghostty

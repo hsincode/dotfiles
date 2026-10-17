@@ -1,0 +1,16 @@
+# Linux 固有（~/.config/ghostty/os.ghostty としてリンクされる）
+
+# 英字は Berkeley Mono、日本語はフォールバックの IBM Plex Sans JP。
+# Plex の Regular は線が Berkeley Mono の 0.81 倍と細いので、線幅が揃う Text を使う。
+# 太字の日本語は Bold だと重く見えるので SemiBold に落とす
+font-family = "Berkeley Mono"
+font-family = "IBM Plex Sans JP Text"
+font-family-bold = "Berkeley Mono"
+font-family-bold = "IBM Plex Sans JP SemiBold"
+font-family-bold-italic = "Berkeley Mono"
+font-family-bold-italic = "IBM Plex Sans JP SemiBold"
+font-size = 16
+
+# 配色は dwm のテーマに追従する。themes/dwm-current は ~/.config/dwm/theme-apply.sh が
+# 張り替えるリンク（dotfiles の外）。背景の透明度もテーマ側で決めるので、ここには書かない
+theme = "dwm-current"
